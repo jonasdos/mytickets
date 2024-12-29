@@ -1,9 +1,8 @@
 import app from "../src/index"
 import supertest from "supertest"
-import { CreateEventData } from "repositories/events-repository"
 import prisma from "database"
 import { newEventDataTest, newEventDataTestError, notFoundIndex } from "./factories/events"
-import exp from "constants"
+
 
 
 const api = supertest(app)
@@ -39,6 +38,16 @@ describe("POST /events", () => {
     //assert
     expect(status).toBe(422)
   })
+  it("Should return error 409", async () => {
+    //arrange
+    const eventData = newEventDataTest()
+    eventData.name = eventName
+    //act 
+    const {status } = await api.post("/events").send(eventData)
+    //assert
+    expect(status).toBe(409)
+  })
+  
 })
 
 describe("GET /events", () => {
